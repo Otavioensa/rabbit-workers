@@ -1,0 +1,29 @@
+{
+  "name": "rabbit-workers-talk",
+  "version": "1.0.0",
+  "description": "Repository created for supporting my talk about 'Rabbit Workers'",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-sender": "babel-node ./src/sender",
+    "start-worker": "babel-node ./src/worker"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Otavioensa/rabbit-workers-talk.git"
+  },
+  "author": "Otávio Augusto <otavioensa@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Otavioensa/rabbit-workers-talk/issues"
+  },
+  "homepage": "https://github.com/Otavioensa/rabbit-workers-talk#readme",
+  "dependencies": {
+    "amqplib": "^0.5.2",
+    "bluebird": "^3.5.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  }
+}
