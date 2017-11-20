@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-sender": "babel-node ./src/sender",
-    "start-worker": "babel-node ./src/worker"
+    "sender": "babel-node ./src/sender",
+    "worker": "babel-node ./src/worker"
   },
   "repository": {
     "type": "git",

@@ -1,8 +1,7 @@
 
-
 const rabbitConfig = {
   uri: process.env.rabbbitUri || 'amqp://localhost',
   workQueue: process.env.workQueue || 'workQueue',
 };
 
-export { rabbitConfig };
+export default rabbitConfig;

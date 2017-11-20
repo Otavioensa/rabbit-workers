@@ -1,7 +1,7 @@
 
 import amqp from 'amqplib';
 import promise from 'bluebird';
-import { rabbitConfig } from './config';
+import config from './config';
 
 const assertQueueOptions = { durable: true };
 const sendToQueueOptions = { persistent: true };
@@ -10,10 +10,10 @@ const data = process.argv[2] ? process.argv[2] : 'any data goes here';
 const {
   uri,
   workQueue,
-} = rabbitConfig;
+} = config;
 
 // eslint-disable-next-line
-const processLightStuff = () => promise.resolve(console.log('Process light stuff'));
+const lightTask = () => console.log('Light task');
 
 const assertAndSendToQueue = (channel) => {
   const bufferedData = Buffer.from(data);
@@ -28,6 +28,6 @@ const sendDataToQueue = () => amqp.connect(uri)
   .then(channel => assertAndSendToQueue(channel));
 
 // eslint-disable-next-line
-const send = (() => processLightStuff()
+const send = (() => promise.resolve(lightTask())
   .then(() => sendDataToQueue())
   .then(() => process.exit(0)))();
