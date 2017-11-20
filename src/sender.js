@@ -1,32 +1,33 @@
-'use strict';
 
-const amqp = require('amqplib');
-const config = require('./config');
-const promise = require('bluebird');
+import amqp from 'amqplib';
+import promise from 'bluebird';
+import { rabbitConfig } from './config';
 
-const uri = config.rabbit.uri;
-const workQueue = config.rabbit.workQueue;
 const assertQueueOptions = { durable: true };
 const sendToQueueOptions = { persistent: true };
 const data = process.argv[2] ? process.argv[2] : 'any data goes here';
 
+const {
+  uri,
+  workQueue,
+} = rabbitConfig;
+
+// eslint-disable-next-line
 const processLightStuff = () => promise.resolve(console.log('Process light stuff'));
 
-const sendDataToQueue = () => {
-  return amqp.connect(uri)
-    .then((connection) => connection.createChannel())
-    .then((channel) => assertAndSendToQueue(channel));
-};
-
 const assertAndSendToQueue = (channel) => {
-
-  const bufferedData = new Buffer(data);
+  const bufferedData = Buffer.from(data);
 
   return channel.assertQueue(workQueue, assertQueueOptions)
     .then(() => channel.sendToQueue(workQueue, bufferedData, sendToQueueOptions))
     .then(() => channel.close());
 };
 
+const sendDataToQueue = () => amqp.connect(uri)
+  .then(connection => connection.createChannel())
+  .then(channel => assertAndSendToQueue(channel));
+
+// eslint-disable-next-line
 const send = (() => processLightStuff()
- .then(() => sendDataToQueue())
- .then(() => process.exit(0)))()
+  .then(() => sendDataToQueue())
+  .then(() => process.exit(0)))();
