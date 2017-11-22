@@ -11,9 +11,8 @@ const {
   workQueue,
 } = config;
 
-// eslint-disable-next-line
-const heavyTask = msg => setTimeout(() => console.log(
-  msg.content.toString()), Math.random() * 10000);
+const heavyTask = msg => setTimeout(() =>
+  console.log(msg.content.toString()), Math.random() * 10000);
 
 const assertAndConsumeQueue = (channel) => {
   const ackMsg = msg => promise.resolve(heavyTask(msg))
@@ -24,7 +23,8 @@ const assertAndConsumeQueue = (channel) => {
     .then(() => channel.consume(workQueue, ackMsg, consumeQueueOptions));
 };
 
-// eslint-disable-next-line
-const getMessages = (() => amqp.connect(uri)
+const getQueueMessages = (() => amqp.connect(uri)
   .then(connection => connection.createChannel())
-  .then(channel => assertAndConsumeQueue(channel)))();
+  .then(channel => assertAndConsumeQueue(channel)));
+
+export default getQueueMessages();

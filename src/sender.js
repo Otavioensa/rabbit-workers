@@ -12,8 +12,7 @@ const {
   workQueue,
 } = config;
 
-// eslint-disable-next-line
-const lightTask = () => console.log('Light task');
+const lightTask = () => promise.resolve(console.log('Light task'));
 
 const assertAndSendToQueue = (channel) => {
   const bufferedData = Buffer.from(data);
@@ -23,11 +22,12 @@ const assertAndSendToQueue = (channel) => {
     .then(() => channel.close());
 };
 
-const sendDataToQueue = () => amqp.connect(uri)
+const sendHardTaskToQueue = () => amqp.connect(uri)
   .then(connection => connection.createChannel())
   .then(channel => assertAndSendToQueue(channel));
 
-// eslint-disable-next-line
-const send = (() => promise.resolve(lightTask())
-  .then(() => sendDataToQueue())
-  .then(() => process.exit(0)))();
+const start = (() => lightTask()
+  .then(() => sendHardTaskToQueue())
+  .then(() => process.exit(0)));
+
+export default start();
