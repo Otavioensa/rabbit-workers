@@ -15,8 +15,9 @@ const heavyTask = msg => setTimeout(() =>
   console.log(msg.content.toString()), Math.random() * 10000);
 
 const assertAndConsumeQueue = (channel) => {
-  const ackMsg = msg => promise.resolve(heavyTask(msg))
-    .then(() => channel.ack(msg));
+  const ackMsg = msg => console.log('Message received') || promise.resolve(
+    heavyTask(msg))
+      .then(() => channel.ack(msg));
 
   return channel.assertQueue(workQueue, assertQueueOptions)
     .then(() => channel.prefetch(1))
