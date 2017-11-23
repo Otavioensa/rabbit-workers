@@ -1,31 +1,38 @@
 
-import amqp from 'amqplib';
-import promise from 'bluebird';
-import config from './config';
+import amqp from 'amqplib'
+import {
+  resolve,
+  tap,
+} from 'bluebird'
+import config from './config'
 
-const assertQueueOptions = { durable: true };
-const consumeQueueOptions = { noAck: false };
+const assertQueueOptions = { durable: true }
+const consumeQueueOptions = { noAck: false }
 
 const {
   uri,
   workQueue,
-} = config;
+} = config
 
-const heavyTask = msg => setTimeout(() =>
-  console.log(msg.content.toString()), Math.random() * 10000);
+const genRamdomTime = () => Math.random() * 10000
+
+const processHeavyTask = msg => resolve(console.log('Message received'))
+  .then(setTimeout(() => console.log(msg.content.toString()), genRamdomTime()))
 
 const assertAndConsumeQueue = (channel) => {
-  const ackMsg = msg => console.log('Message received') || promise.resolve(
-    heavyTask(msg))
-      .then(() => channel.ack(msg));
+
+  const ackMsg = (msg) => resolve(msg)
+    .tap(msg => processHeavyTask(msg))
+    .then((msg) => channel.ack(msg))
 
   return channel.assertQueue(workQueue, assertQueueOptions)
     .then(() => channel.prefetch(1))
-    .then(() => channel.consume(workQueue, ackMsg, consumeQueueOptions));
+    .then(() => channel.consume(workQueue, ackMsg, consumeQueueOptions))
 };
 
-const getQueueMessages = (() => amqp.connect(uri)
+const listenToQueue = () => amqp.connect(uri)
   .then(connection => connection.createChannel())
-  .then(channel => assertAndConsumeQueue(channel)));
+  .then(channel => assertAndConsumeQueue(channel))
 
-export default getQueueMessages();
+
+export default listenToQueue()
