@@ -1,6 +1,8 @@
 
 import amqp from 'amqplib'
-import promise from 'bluebird'
+import {
+  resolve,
+} from 'bluebird'
 import config from './config'
 
 const assertQueueOptions = { durable: true }
@@ -12,7 +14,7 @@ const {
   workQueue,
 } = config
 
-const lightTask = () => promise.resolve(console.log('Light task'))
+const lightTask = () => resolve(console.log('Light task abstraction'))
 
 const assertAndSendToQueue = (channel) => {
   const bufferedData = Buffer.from(data)
@@ -28,6 +30,7 @@ const sendHardTaskToQueue = () => amqp.connect(uri)
 
 const start = () => lightTask()
   .then(() => sendHardTaskToQueue())
+  .tap(() => console.log('The message has been sent to queue'))
   .then(() => process.exit(0))
 
 export default start()
