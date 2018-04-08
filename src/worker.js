@@ -2,7 +2,6 @@
 import amqp from 'amqplib'
 import {
   resolve,
-  tap,
 } from 'bluebird'
 import config from './config'
 
