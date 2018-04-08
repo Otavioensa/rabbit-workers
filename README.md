@@ -11,6 +11,13 @@ You should already have node, npm and rabbit installed on your machine!
 ```
 1) Clone the repository
 2) Go to the application root directory and execute npm install
-3) npm run worker for start running the worker application
-4) npm run publisher yourMessageAsParameter for sending your message to the queue
+3) "npm run worker" for start running the worker application
+4) "npm run publisher yourMessageAsParameter" for sending your message to the queue
 ```
+
+## Publisher/Worker Demonstration
+
+1) Publisher application sends a message
+2) Worker application starts and receive the published message
+
+[![asciicast](https://asciinema.org/a/zkjxZQSNEupL3h4Reqs6dDej2.png)](https://asciinema.org/a/zkjxZQSNEupL3h4Reqs6dDej2?speed=2&autoplay=1)
